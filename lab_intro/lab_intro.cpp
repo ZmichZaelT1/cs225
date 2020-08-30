@@ -6,6 +6,10 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
+#include <stdlib.h>
+#include <cmath>        // std::abs
+
 
 #include "cs225/PNG.h"
 #include "cs225/HSLAPixel.h"
@@ -61,6 +65,27 @@ PNG grayscale(PNG image) {
  * @return The image with a spotlight.
  */
 PNG createSpotlight(PNG image, int centerX, int centerY) {
+  const double kLuminanceIndex = 0.005;
+  const double kMinLuminance = 0.2;
+  double distance_x, distance_y;
+
+  for (unsigned int x = 0; x < image.width(); x++) {
+    for (unsigned int y = 0; y < image.height(); y++) {
+      HSLAPixel & pixel = image.getPixel(x, y);
+      int x_ = centerX - x;
+      int y_ = centerY - y;
+      distance_x = std::abs(x_);
+      distance_y = std::abs(y_);
+      double distance = std::sqrt(std::pow(distance_x, 2) + std::pow(distance_y, 2));
+      double new_luminance = 1 - distance * kLuminanceIndex;
+      
+      if (distance > 160) {
+        pixel.l *= kMinLuminance;
+      } else {
+        pixel.l *= std::max(kMinLuminance, new_luminance);
+      }
+    }
+  }
 
   return image;
   
@@ -78,7 +103,20 @@ PNG createSpotlight(PNG image, int centerX, int centerY) {
  * @return The illinify'd image.
 **/
 PNG illinify(PNG image) {
+  const double kOrangeHue = 11;
+  const double kBlueHue = 216;
 
+  for (unsigned x = 0; x < image.width(); x++) {
+    for (unsigned y = 0; y < image.height(); y++) {
+      HSLAPixel & pixel = image.getPixel(x, y);
+
+      if (pixel.h > 113.5 && pixel.h < 293.5) {
+        pixel.h = kBlueHue;
+      } else {
+        pixel.h = kOrangeHue;
+      }
+    }
+  }
   return image;
 }
  
@@ -96,6 +134,19 @@ PNG illinify(PNG image) {
 * @return The watermarked image.
 */
 PNG watermark(PNG firstImage, PNG secondImage) {
+  for (unsigned x = 0; x < secondImage.width(); x++) {
+    for (unsigned y = 0; y < secondImage.height(); y++) {
+      HSLAPixel & secondImagePixel = secondImage.getPixel(x, y);
+      HSLAPixel & firstImagePixel = firstImage.getPixel(x, y);
 
+      if (secondImagePixel.l == 1) {
+        if (firstImagePixel.l <= 0.8) {
+          firstImagePixel.l += 0.2;
+        } else {
+          firstImagePixel.l = 1;
+        }
+      }
+    }
+  }
   return firstImage;
 }

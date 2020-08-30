@@ -12,9 +12,7 @@
 using namespace std;
 
 namespace cs225 {
-    HSLAPixel::HSLAPixel() {
-
-    }
+    HSLAPixel::HSLAPixel() {}
 
     HSLAPixel::HSLAPixel(double hue, double saturation, double luminance) {
         if (hue > 0 && hue < 360) {
