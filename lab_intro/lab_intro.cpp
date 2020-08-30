@@ -65,27 +65,7 @@ PNG grayscale(PNG image) {
  * @return The image with a spotlight.
  */
 PNG createSpotlight(PNG image, int centerX, int centerY) {
-  const double kLuminanceIndex = 0.005;
-  const double kMinLuminance = 0.2;
-  double distance_x, distance_y;
 
-  for (unsigned int x = 0; x < image.width(); x++) {
-    for (unsigned int y = 0; y < image.height(); y++) {
-      HSLAPixel & pixel = image.getPixel(x, y);
-      int x_ = centerX - x;
-      int y_ = centerY - y;
-      distance_x = std::abs(x_);
-      distance_y = std::abs(y_);
-      double distance = std::sqrt(std::pow(distance_x, 2) + std::pow(distance_y, 2));
-      double new_luminance = 1 - distance * kLuminanceIndex;
-      
-      if (distance > 160) {
-        pixel.l *= kMinLuminance;
-      } else {
-        pixel.l *= std::max(kMinLuminance, new_luminance);
-      }
-    }
-  }
 
   return image;
   
@@ -148,5 +128,5 @@ PNG watermark(PNG firstImage, PNG secondImage) {
       }
     }
   }
-  return firstImage;
+  return firstImage;  
 }
