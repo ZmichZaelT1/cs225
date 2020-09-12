@@ -18,12 +18,22 @@ Allocator::Allocator(const std::string& studentFile, const std::string& roomFile
     loadRooms(roomFile);
 }
 
+Allocator::~Allocator() {
+    if (alpha != NULL) {
+        delete[] alpha;
+    }
+    if (rooms != NULL) {
+        delete[] rooms;
+    }
+}
+
 void Allocator::createLetterGroups()
 {
     // Make letters (A - Z lettergroups)
     alpha = new Letter[26];
-    for (int i = 0; i < 26; i++)
+    for (int i = 0; i < 26; i++) {
         alpha[i].letter = 'A' + i;
+    }
 }
 
 void Allocator::loadStudents(const std::string& file)
@@ -44,14 +54,16 @@ void Allocator::loadRooms(const std::string& file)
 {
     // Read in rooms
     fileio::loadRooms(file);
+    roomCount = fileio::getNumRooms();
     rooms = new Room[roomCount];
 
     totalCapacity = 0;
     int i = 0;
     while (fileio::areMoreRooms()) {
-        i++; 
         rooms[i] = fileio::nextRoom();
         totalCapacity += rooms[i].capacity;
+        i++; 
+
     }
 }
 
@@ -60,8 +72,9 @@ void Allocator::printStudents(std::ostream & stream /* = std::cout */)
 {
     // Output number of each last letter name
     stream << "Student counts (" << studentCount << " total)" << std::endl;
-    for (int i = 0; i < 26; i++)
+    for (int i = 0; i < 26; i++) {
         stream << alpha[i].letter << ": " << alpha[i].count << std::endl;
+    }
 }
 
 void Allocator::allocate()
@@ -81,8 +94,9 @@ void Allocator::printRooms(std::ostream & stream /* = std::cout */)
     // Output the allocation
     stream << "Room Allocation (" << studentCount << "/" << totalCapacity << ")"
          << std::endl;
-    for (int i = 0; i < roomCount; i++)
+    for (int i = 0; i < roomCount; i++) {
         rooms[i].print(stream);
+    }
 }
 
 int Allocator::solve()
@@ -100,9 +114,10 @@ int Allocator::solve()
 int Allocator::minSpaceRemaining()
 {
     int border = 1000000;
-    for (int i = 0; i < roomCount; i++)
+    for (int i = 0; i < roomCount; i++) {
         if (rooms[i].spaceRemaining() < border)
             border = rooms[i].spaceRemaining();
+    }
     return border;
 }
 
