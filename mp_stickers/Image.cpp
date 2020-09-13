@@ -118,11 +118,18 @@ void Image::rotateColor(double degrees) {
     for (unsigned x = 0; x < this->width(); x++) {
         for (unsigned y = 0; y < this->height(); y++) {
             cs225::HSLAPixel & pixel = this->getPixel(x, y);
-            if ((pixel.h + degrees) > 360) {
-                pixel.h = int (pixel.h + degrees) % 360;
-            } else {
-                pixel.h += degrees;
+            pixel.h += degrees;
+            while (pixel.h > 360) {
+                pixel.h -= 360;
             }
+            while (pixel.h < 0) {
+                pixel.h += 360;
+            }
+            // if ((pixel.h + degrees) > 360) {
+            //     pixel.h = int (pixel.h + degrees) % 360;
+            // } else {
+            //     pixel.h += degrees;
+            // }
         }
     }
 }
@@ -148,8 +155,8 @@ void Image::scale(double factor) {
     int new_x = this->width() * factor;
     int new_y = this->height() * factor;
 
-    this->resize(new_x, new_y);
     Image *new_image = new Image(*this);
+    this->resize(new_x, new_y);
 
     for (int x = 0; x < new_x; x++) {
         for (int y = 0; y < new_y; y++) {
@@ -162,8 +169,8 @@ void Image::scale(double factor) {
 void Image::scale(unsigned w, unsigned h) {
     double factor_x = w / this->width();
     double factor_y = h / this->height();
-    this->resize(new_x, new_y);
     Image *new_image = new Image(*this);
+    this->resize(w, h);
 
     for (unsigned x = 0; x < w; x++) {
         for (unsigned y = 0; y < h; y++) {
