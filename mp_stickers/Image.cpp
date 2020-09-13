@@ -145,7 +145,30 @@ void Image::illinify() {
 }
 
 void Image::scale(double factor) {
+    int new_x = this->width() * factor;
+    int new_y = this->height() * factor;
 
+    this->resize(new_x, new_y);
+    Image *new_image = new Image(*this);
+
+    for (int x = 0; x < new_x; x++) {
+        for (int y = 0; y < new_y; y++) {
+            this->getPixel(x,y) = new_image->getPixel(x / factor,y / factor);
+        }
+    }
+    delete new_image;
 }
 
-void Image::scale(unsigned w, unsigned h) {}
+void Image::scale(unsigned w, unsigned h) {
+    double factor_x = w / this->width();
+    double factor_y = h / this->height();
+    this->resize(new_x, new_y);
+    Image *new_image = new Image(*this);
+
+    for (unsigned x = 0; x < w; x++) {
+        for (unsigned y = 0; y < h; y++) {
+            this->getPixel(x,y) = new_image->getPixel(x / factor_x ,y / factor_y);
+        }
+    }
+    delete new_image;
+}
