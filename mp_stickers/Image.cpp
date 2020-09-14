@@ -125,11 +125,6 @@ void Image::rotateColor(double degrees) {
             while (pixel.h < 0) {
                 pixel.h += 360;
             }
-            // if ((pixel.h + degrees) > 360) {
-            //     pixel.h = int (pixel.h + degrees) % 360;
-            // } else {
-            //     pixel.h += degrees;
-            // }
         }
     }
 }
@@ -169,12 +164,13 @@ void Image::scale(double factor) {
 void Image::scale(unsigned w, unsigned h) {
     double factor_x = w / this->width();
     double factor_y = h / this->height();
+    double factor = std::min(factor_x, factor_y);
     Image *new_image = new Image(*this);
     this->resize(w, h);
 
     for (unsigned x = 0; x < w; x++) {
         for (unsigned y = 0; y < h; y++) {
-            this->getPixel(x,y) = new_image->getPixel(x / factor_x ,y / factor_y);
+            this->getPixel(x,y) = new_image->getPixel(x / factor ,y / factor);
         }
     }
     delete new_image;
