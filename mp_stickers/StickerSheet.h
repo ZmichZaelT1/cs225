@@ -21,8 +21,10 @@ class StickerSheet {
 
     private:
     Image * image_array;
-    int index;
-    int x_coordinate;
-    int y_coordinate;
+    Image * base;
+    Image a;
+    // int index;
+    // int x_coordinate;
+    // int y_coordinate;
 };
  
