@@ -20,7 +20,6 @@ class StickerSheet {
     Image render () const;
 
     private:
-    // Image ** image_array;
     Image ** images;
 
     Image * base;
@@ -29,7 +28,6 @@ class StickerSheet {
     unsigned * x_coordinate;
     unsigned * y_coordinate;
     unsigned max_;
-    // int max_;
     void copy_(const StickerSheet & other);
     void clear_();
 };
