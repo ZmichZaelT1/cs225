@@ -26,12 +26,12 @@ const StickerSheet & StickerSheet::operator=(const StickerSheet & other) {
 }
 
 void StickerSheet::changeMaxStickers(unsigned max) {
-	Image ** temp_images = new Image * [index_];
+	Image ** copy_images = new Image * [index_];
 	unsigned * copy_x_coordinate = new unsigned [index_];
 	unsigned * copy_y_coordinate = new unsigned [index_];
 
 	for (unsigned i = 0; i < index_; i++) {
-		temp_images[i] = images[i];
+		copy_images[i] = images[i];
 		copy_x_coordinate[i] = x_coordinate[i];
 		copy_y_coordinate[i] = y_coordinate[i];
 	}
@@ -44,22 +44,23 @@ void StickerSheet::changeMaxStickers(unsigned max) {
 	y_coordinate = new unsigned[max];
 
     if (max < index_) {
-		for (unsigned i = max_; i < index_; i++) {
-			delete images[i];
-			images[i] = NULL;
+		for (unsigned i = max; i < index_; i++) {
+			delete copy_images[i];
+			copy_images[i] = NULL;
 		}
 		index_ = max;
     }
 	for (unsigned i = 0; i < index_; i++) {
-		images[i] = temp_images[i];
+		images[i] = copy_images[i];
 		x_coordinate[i] = copy_x_coordinate[i];
 		y_coordinate[i] = copy_y_coordinate[i];
 	}
 
-	max_ = max;
-	delete[] temp_images;
+	delete[] copy_images;
 	delete[] copy_x_coordinate;
 	delete[] copy_y_coordinate;
+	max_ = max;
+
 }
 
 int StickerSheet::addSticker(Image & sticker, unsigned x, unsigned y) {
@@ -152,4 +153,5 @@ void StickerSheet::clear_() {
 		delete images[i];
 		images[i] = NULL;
 	}
+	delete[] images;
 }
