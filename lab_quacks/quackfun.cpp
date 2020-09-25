@@ -29,9 +29,15 @@ namespace QuackFun {
 template <typename T>
 T sum(stack<T>& s)
 {
-
-    // Your code here
-    return T(); // stub return value (0 for primitive types). Change this!
+    if (s.empty()) {
+        return T();
+    }
+    T temp = s.top();
+    s.pop();
+    T total = temp + sum(s);
+    s.push(temp);
+    return total;
+    // stub return value (0 for primitive types). Change this!
                 // Note: T() is the default value for objects, and 0 for
                 // primitive types
 }
@@ -55,9 +61,30 @@ T sum(stack<T>& s)
  */
 bool isBalanced(queue<char> input)
 {
+    if (input.empty()) {
+        return true;
+    }
 
-    // @TODO: Make less optimistic
-    return true;
+    stack<char> temp;
+    while (!(input.empty())) {
+        if (input.front() == '[') {
+            temp.push(input.front());
+        } else if (input.front() == ']') {
+            if (temp.empty()) {
+                return false;
+            } else if (temp.top() != '[') {
+                return false;
+            }
+            temp.pop();
+        }
+
+        input.pop();
+    }
+    if (temp.empty()) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /**
@@ -78,9 +105,41 @@ bool isBalanced(queue<char> input)
 template <typename T>
 void scramble(queue<T>& q)
 {
+    if (q.empty()) {
+        return;
+    }
     stack<T> s;
-    // optional: queue<T> q2;
+    queue<T> q2;
+    unsigned long count = 1;
+    bool reverse = false;
 
-    // Your code here
+    while (!(q.empty())) {
+        q2.push(q.front());
+        q.pop();
+    }
+
+    while (!(q2.empty())) {
+        if (count > q2.size()) {
+            count = q2.size();
+        }
+        if (reverse) {
+            for (unsigned long i = 0; i < count; i++) {
+                s.push(q2.front());
+                q2.pop();
+            }
+            for (unsigned long i = 0; i < count; i++) {
+                q.push(s.top());
+                s.pop();
+            }
+            reverse = false;
+        } else {
+            for (unsigned long i = 0; i < count; i++) {
+                q.push(q2.front());
+                q2.pop();
+            }
+            reverse = true;
+        }
+        count++;
+    }
 }
 }
