@@ -106,6 +106,7 @@ class List {
      * @param os Output stream to print the list to (e.g. cout)
      */
     void print(ostream& os = std::cout) const;
+    void printb(ostream& os = std::cout) const;
 
     /**
      * Determines if the current List is empty.

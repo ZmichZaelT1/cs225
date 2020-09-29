@@ -37,6 +37,22 @@ typename List<T>::ListIterator List<T>::end() const {
  */
 template <typename T>
 void List<T>::_destroy() {
+      std::cout<<"called";
+
+  ListNode * curr = head_;
+  if(curr==NULL)
+  {
+    std::cout<<"return";
+    return;
+  }
+  ListNode * temp;
+  while(curr != NULL)
+  {
+    temp=temp->next;
+    delete curr;
+    curr = temp;
+  }
+
   /// @todo Graded in MP3.1
 }
 
@@ -110,7 +126,6 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
     return start;
   }
 
-
   ListNode * curr = start;
 
   for (int i = 0; i < splitPoint && curr != NULL; i++) {
@@ -118,8 +133,10 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   }
 
   if (curr != NULL) {
-    curr->prev->next = NULL;
-    curr->prev = NULL;
+    if (curr->prev != NULL) {
+      curr->prev->next = NULL;
+      curr->prev = NULL;
+    }
     return curr;
   }
 
@@ -143,23 +160,20 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
 //   }
 
 //   int count = length_ / 3;
-//   List<T> temp = this->split(length_ - 1);
+//   List<T> temp = this->split(0);
 //   List<T> split;
-//   List<T> copy = temp;
-//   for (int i = count; i > 0; i--) {
+//   List<T> copy;
 
+//   for (int i = 1; i <= count; i++) {
 //     split = temp.split(3);
 //     ListNode *temp_head = temp.head_;
 //     ListNode *temp_tail = temp.tail_;
 //     temp.head_ = temp.head_->next;
 //     temp.tail_ = temp_head;
 //     temp.head_->prev = NULL;
-//     temp.head_->next = temp_tail;
-//     temp_tail->prev = temp.head_;
 //     temp_tail->next = temp.tail_;
 //     temp.tail_->prev = temp_tail;
 //     temp.tail_->next = NULL;
-
 
 //     if (i == 1) {
 //       copy = temp;
@@ -169,56 +183,88 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
 //       temp_list->next = temp.head_;
 //       temp.head_->prev = temp_list;
 //     }
-
 //     temp = split;
+//     this->head_ = copy.head_;
 //   }
-//   this->head_ = copy.head_;
-//   // @todo Graded in MP3.1
 // }
 
 
+// template <typename T>
+// void List<T>::tripleRotate() {
+  // if (length_ < 3) {
+  //   return;
+  // }
+
+  // int count = length_ / 3;
+  // List<T> temp = this->split(0);
+  // List<T> split;
+  // List<T> copy;
+
+  // for (int i = 1; i <= count; i++) {
+    // split = temp.split(3);
+    // ListNode *temp_head = temp.head_;
+    // ListNode *temp_tail = temp.tail_;
+    // temp.head_ = temp.head_->next;
+    // temp.tail_ = temp_head;
+    // temp.head_->prev = NULL;
+    // temp_tail->next = temp.tail_;
+    // temp_tail->prev = temp.head_;
+    // temp.tail_->prev = temp_tail;
+    // temp.tail_->next = NULL;
+    
+      // copy = temp;
+
+    // if (i == 1) {
+    //   copy = temp;
+    // } else {
+    //   ListNode *temp_list = copy.tail_;
+    //   copy.tail_ = temp.tail_;
+    //   std::cout<<"tail prev"<<copy.tail_->prev->data<<std::endl;
+    //   temp_list->next = temp.head_;
+    //   temp.head_->prev = temp_list;
+    // }
+    // temp = split;
+//     this->head_ = temp.head_;
+//     this->tail_ = temp.tail_;
+//   }
+// }
+
 template <typename T>
 void List<T>::tripleRotate() {
-  if (length_ < 3) {
-    return;
-  }
-  
-  int count = length_ / 3;
-  List<T> temp = this->split(0);
-  List<T> split;
-  List<T> copy;
-  for (int i = 1; i <= count; i++) {
+  ListNode * curr = head_;
+  int i = 1;
 
-    split = temp.split(3);
-    ListNode *temp_head = temp.head_;
-    ListNode *temp_tail = temp.tail_;
-    temp.head_ = temp.head_->next;
-    temp.tail_ = temp_head;
-    temp.head_->prev = NULL;
-    temp_tail->next = temp.tail_;
-    temp.tail_->prev = temp_tail;
-    temp.tail_->next = NULL;
+  while (curr != NULL) {
+    if (i % 3 == 0) {
+      ListNode * third = curr;
+      ListNode * second = third->prev;
+      ListNode * first = second->prev;
+      curr = curr->next;
+      ListNode * front = first->prev;
+      third->next = first;
+      second->prev = front;
 
+      if (front != NULL) {
+        front->next = second;
+      }
+      if (curr != NULL) {
+        curr->prev = first;
+      }
 
-    if (i == 1) {
-      copy = temp;
+      first->next = curr;
+      first->prev = third;
+      if (i == 3) {
+        head_ = second;
+      }
+      if (i / 3 == length_ / 3) {
+        tail_ = first;
+      }
     } else {
-      ListNode *temp_list = copy.tail_;
-      copy.tail_ = temp.tail_;
-      temp_list->next = temp.head_;
-      temp.head_->prev = temp_list;
+      curr = curr->next;
     }
-
-    temp = split;
-
-    this->head_ = copy.head_;
-
+    i++;
   }
-
 }
-
-
-
 
 
 /**
