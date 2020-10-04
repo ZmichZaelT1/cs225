@@ -208,7 +208,7 @@ class BinaryTree
          */
         void inOrder(Node *subRoot, std::vector<T>& treeVector);
         void mirror(Node * root);
-        bool isOrderedRecursive(Node* subRoot,Node *&prev) const;
+        bool isOrderedRecursive(Node* root,Node *&prev) const;
 
 };
 
