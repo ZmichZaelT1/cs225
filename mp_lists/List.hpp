@@ -6,8 +6,8 @@
 template <class T>
 List<T>::List() { 
   // @TODO: graded in MP3.1
-    ListNode* head_ = NULL;
-    ListNode* tail_ = NULL;
+    head_ = NULL;
+    tail_ = NULL;
     length_ = 0;
 }
 
@@ -37,22 +37,21 @@ typename List<T>::ListIterator List<T>::end() const {
  */
 template <typename T>
 void List<T>::_destroy() {
-      std::cout<<"called";
-
   ListNode * curr = head_;
   if(curr==NULL)
   {
-    std::cout<<"return";
     return;
   }
-  ListNode * temp;
+  ListNode * temp = curr;
   while(curr != NULL)
   {
     temp=temp->next;
     delete curr;
     curr = temp;
   }
-
+  // head_ = NULL;
+  // tail_ = NULL;
+  // length_ = 0;
   /// @todo Graded in MP3.1
 }
 
@@ -153,82 +152,6 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   * 
   * You may NOT allocate ANY new ListNodes!
   */
-// template <typename T>
-// void List<T>::tripleRotate() {
-//   if (length_ < 3) {
-//     return;
-//   }
-
-//   int count = length_ / 3;
-//   List<T> temp = this->split(0);
-//   List<T> split;
-//   List<T> copy;
-
-//   for (int i = 1; i <= count; i++) {
-//     split = temp.split(3);
-//     ListNode *temp_head = temp.head_;
-//     ListNode *temp_tail = temp.tail_;
-//     temp.head_ = temp.head_->next;
-//     temp.tail_ = temp_head;
-//     temp.head_->prev = NULL;
-//     temp_tail->next = temp.tail_;
-//     temp.tail_->prev = temp_tail;
-//     temp.tail_->next = NULL;
-
-//     if (i == 1) {
-//       copy = temp;
-//     } else {
-//       ListNode *temp_list = copy.tail_;
-//       copy.tail_ = temp.tail_;
-//       temp_list->next = temp.head_;
-//       temp.head_->prev = temp_list;
-//     }
-//     temp = split;
-//     this->head_ = copy.head_;
-//   }
-// }
-
-
-// template <typename T>
-// void List<T>::tripleRotate() {
-  // if (length_ < 3) {
-  //   return;
-  // }
-
-  // int count = length_ / 3;
-  // List<T> temp = this->split(0);
-  // List<T> split;
-  // List<T> copy;
-
-  // for (int i = 1; i <= count; i++) {
-    // split = temp.split(3);
-    // ListNode *temp_head = temp.head_;
-    // ListNode *temp_tail = temp.tail_;
-    // temp.head_ = temp.head_->next;
-    // temp.tail_ = temp_head;
-    // temp.head_->prev = NULL;
-    // temp_tail->next = temp.tail_;
-    // temp_tail->prev = temp.head_;
-    // temp.tail_->prev = temp_tail;
-    // temp.tail_->next = NULL;
-    
-      // copy = temp;
-
-    // if (i == 1) {
-    //   copy = temp;
-    // } else {
-    //   ListNode *temp_list = copy.tail_;
-    //   copy.tail_ = temp.tail_;
-    //   std::cout<<"tail prev"<<copy.tail_->prev->data<<std::endl;
-    //   temp_list->next = temp.head_;
-    //   temp.head_->prev = temp_list;
-    // }
-    // temp = split;
-//     this->head_ = temp.head_;
-//     this->tail_ = temp.tail_;
-//   }
-// }
-
 template <typename T>
 void List<T>::tripleRotate() {
   ListNode * curr = head_;

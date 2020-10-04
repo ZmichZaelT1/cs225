@@ -73,12 +73,10 @@ TEST_CASE("List::triplerotate simple", "[weight=10][part=1][valgrind]") {
     list.tripleRotate();
 
     stringstream s;
-        stringstream s1;
 
 
     list.print(s);
-    // list.printb(s1);
-    // REQUIRE("< 4 6 5 1 3 2 >" == s1.str());
+
 
     REQUIRE("< 2 3 1 5 6 4 >" == s.str());
 
