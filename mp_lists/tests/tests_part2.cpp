@@ -25,6 +25,21 @@ TEST_CASE("List::reverse", "[weight=5][part=2]") {
   INFO("Output image `out` saved as actual-reverse.png");
 
   REQUIRE( out == expected );
+    // List<int> list;
+
+    // for (int i = 1; i <= 6; i++)
+    //     list.insertBack(i);
+
+    // list.reverse();
+
+    // stringstream s;
+
+
+    // list.print(s);
+
+
+    // REQUIRE("< 6 5 4 3 2 1 >" == s.str());
+
 }
 
 TEST_CASE("List::reverseNth #1", "[weight=5][part=2]") {
@@ -32,13 +47,29 @@ TEST_CASE("List::reverseNth #1", "[weight=5][part=2]") {
   PNG expected;  expected.readFromFile("tests/expected-reverseN_1.png");
 
   List<HSLAPixel> list = imageToList(in);
-  list.reverseNth(in.height() * 20);
 
+  list.reverseNth(in.height() * 20);
   PNG out = listToImage(list, in.width(), in.height());
   out.writeToFile("actual-reverseN_1.png");
   INFO("Output image `out` saved as actual-reverseN_1.png");
 
   REQUIRE( out == expected );
+  //   List<int> list;
+
+  //   for (int i = 1; i <= 10; i++)
+  //       list.insertBack(i);
+  // std::cout<<"1"<<std::endl;
+
+  //   list.reverseNth(5);
+  // std::cout<<"1"<<std::endl;
+
+  //   stringstream s;
+
+
+  //   list.print(s);
+
+
+  //   REQUIRE("< 3 2 1 4 5 6 >" == s.str());
 }
 
 TEST_CASE("List::reverseNth #2", "[weight=5][part=2]") {
@@ -68,12 +99,18 @@ TEST_CASE("List::merge", "[weight=10][part=2][valgrind]") {
       for (unsigned j = 0; j < im1.height(); j++)
           v1.push_back(im1.getPixel(i, j));
   vector<HSLAPixel> v2;
-  for (unsigned i = 0; i < im2.width(); i++)
-      for (unsigned j = 0; j < im2.height(); j++)
+  for (unsigned i = 0; i < im2.width(); i++){
+      for (unsigned j = 0; j < im2.height(); j++){
           v2.push_back(im2.getPixel(i, j));
+          // std::cout<<"pixel "<<im2.getPixel(i, j)<<std::endl;
+      }
+  }
   List<HSLAPixel> l1(v1.begin(), v1.end());
   List<HSLAPixel> l2(v2.begin(), v2.end());
+  std::cout<<"reached: "<<__LINE__<<std::endl;
   l1.mergeWith(l2);
+  std::cout<<"reached: "<<__LINE__<<std::endl;
+
   REQUIRE(l1.size() == 600*400);
   vector<HSLAPixel> merged(l1.begin(), l1.end());
   unsigned x = 0;
@@ -88,6 +125,35 @@ TEST_CASE("List::merge", "[weight=10][part=2][valgrind]") {
   INFO("Output image `out` saved as actual-merge.png");
 
   REQUIRE( out == expected );
+
+    //   List<int> list;
+    //   List<int> list2;
+
+    //   list.insertBack(1);
+    //   list.insertBack(3);
+    //   list.insertBack(5);
+    //   list.insertBack(6);
+    //   list.insertBack(7);
+    //   list.insertBack(8);
+
+
+    //   list2.insertBack(2);
+    //   list2.insertBack(5);
+    //   list2.insertBack(5);
+    //   list2.insertBack(6);
+    //   list2.insertBack(6);
+
+
+
+    // list.mergeWith(list2);
+
+    // stringstream s;
+
+
+    // list.print(s);
+
+
+    // REQUIRE("< 3 2 1 4 5 6 >" == s.str());
 }
 
 TEST_CASE("List::sort simple #1", "[weight=2][part=2][valgrind]") {
