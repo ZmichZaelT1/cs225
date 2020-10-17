@@ -24,11 +24,14 @@ using namespace cs225;
 class FloodFilledImage {
 public:
   FloodFilledImage(const PNG & png);
+  ~FloodFilledImage(){delete png_;}
   void addFloodFill(ImageTraversal & traversal, ColorPicker & colorPicker);
   Animation animate(unsigned frameInterval) const;
 
 private:
 	/** @todo [Part 2] */
 	/** add private members here*/
-
+  PNG * png_;
+  vector<ImageTraversal*> traversals;
+  vector<ColorPicker*> color;
 };

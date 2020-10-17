@@ -18,7 +18,12 @@ using namespace cs225;
  */
 FloodFilledImage::FloodFilledImage(const PNG & png) {
   /** @todo [Part 2] */
+  png_ = new PNG(png);
 }
+
+// FloodFilledImage::~FloodFIlledImage() {
+//   delete png_;
+// }
 
 /**
  * Adds a FloodFill operation to the FloodFillImage.  This function must store the operation,
@@ -29,6 +34,8 @@ FloodFilledImage::FloodFilledImage(const PNG & png) {
  */
 void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & colorPicker) {
   /** @todo [Part 2] */
+  traversals.push_back(& traversal);
+  color.push_back(& colorPicker);
 }
 
 /**
@@ -53,5 +60,25 @@ void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & co
 Animation FloodFilledImage::animate(unsigned frameInterval) const {
   Animation animation;
   /** @todo [Part 2] */
+  int i = 0;
+          animation.addFrame(*png_);
+
+  for (ImageTraversal* t: traversals) {
+    unsigned count = 0;
+
+    for (ImageTraversal::Iterator it = t->begin(); it != t->end(); ++it) {
+      if (count == frameInterval) {
+        animation.addFrame(*png_);
+        count = 0;
+      }
+      HSLAPixel & png = png_->getPixel((*it).x, (*it).y);
+      HSLAPixel col = color[i]->getColor((*it).x, (*it).y);
+      png = col;
+      count++;
+    }
+    animation.addFrame(*png_);
+
+    i++;
+  }
   return animation;
 }
