@@ -105,6 +105,11 @@ class KDTree
      */
     bool shouldReplace(const Point<Dim>& target, const Point<Dim>& currentBest,
                        const Point<Dim>& potential) const;
+    unsigned partition(vector<Point<Dim>>& list, int left, int right, int pivotIndex, int dim);
+    Point<Dim>& select(vector<Point<Dim>>& list, int left, int right, unsigned k, int dim);
+    void buildTree(vector<Point<Dim>>& points, int dim, int left, int right, KDTreeNode *& curRoot);
+    void copy(KDTreeNode * root, KDTreeNode * other);
+    void _delete(KDTreeNode * root);
 
     /**
      * Constructs a KDTree from a vector of Points, each having dimension Dim.
