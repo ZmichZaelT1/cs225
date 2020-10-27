@@ -171,6 +171,46 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
     /**
      * @todo Implement this function!
      */
+    return findNearestNeighbor(query, 0, root);
+}
 
-    return Point<Dim>();
+template <int Dim>
+Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query, int dim, KDTreeNode * curRoot) const {
+	if (curRoot->left == NULL && curRoot->right == NULL) {
+		return curRoot->point;
+	}
+
+	Point<Dim> nearest;
+	bool visited;
+	if (smallerDimVal(query, curRoot->point, dim) && curRoot->left != NULL) {
+		nearest = findNearestNeighbor(query, (dim + 1) % Dim, curRoot->left);
+		visited = true;
+	} else {
+		nearest = findNearestNeighbor(query, (dim + 1) % Dim, curRoot->right);
+		visited = false;
+	}
+
+	if (shouldReplace(query, nearest, curRoot->point)) {
+		nearest = curRoot->point;
+	}
+
+	double radius = 0;
+	for (int i = 0; i < Dim; i++) {
+		radius += pow((query[i] - nearest[i]), 2);
+	}
+	double splitDist = pow((curRoot->point[dim] - query[dim]), 2);
+
+	if (radius >= splitDist) {
+		Point<Dim> otherBest;
+		if (visited && curRoot->right != NULL) {
+			otherBest = findNearestNeighbor(query, (dim + 1) % Dim, curRoot->right);
+		} else if (!visited && curRoot->left != NULL){
+			otherBest = findNearestNeighbor(query, (dim + 1) % Dim, curRoot->left);
+		}
+		
+		if (shouldReplace(query, nearest, otherBest)) {
+			nearest = otherBest;
+		}
+	}
+	return nearest;
 }

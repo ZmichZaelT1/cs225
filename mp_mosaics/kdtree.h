@@ -110,6 +110,7 @@ class KDTree
     void buildTree(vector<Point<Dim>>& points, int dim, int left, int right, KDTreeNode *& curRoot);
     void copy(KDTreeNode * root, KDTreeNode * other);
     void _delete(KDTreeNode * root);
+    Point<Dim> findNearestNeighbor(const Point<Dim>& query, int dim, KDTreeNode * curRoot) const;
 
     /**
      * Constructs a KDTree from a vector of Points, each having dimension Dim.
