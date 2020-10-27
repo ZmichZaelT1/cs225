@@ -93,8 +93,7 @@ void KDTree<Dim>::buildTree(vector<Point<Dim>>& points, int dim, int left, int r
 
   if(left <= right){
     unsigned middle = (left + right) / 2;
-    Point<Dim> temp = select(points, left, right, middle, dim);
-    curRoot = new KDTreeNode(temp);
+    curRoot = new KDTreeNode(select(points, left, right, middle, dim));
     size++;
 
     buildTree(points, (dim + 1) % Dim, left, middle - 1, curRoot->left);
@@ -108,9 +107,14 @@ KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
     /**
      * @todo Implement this function!
      */
-    vector<Point<Dim>> copy = newPoints;
-    size = 0;
-    buildTree(copy, 0, 0, copy.size() - 1, root);
+	size = 0;
+	if (newPoints.empty()) {
+	  root = NULL;
+	} else {
+	  vector<Point<Dim>> copy = newPoints;
+      buildTree(copy, 0, 0, copy.size() - 1, root);
+	}
+
 }
 
 template <int Dim>
@@ -119,7 +123,6 @@ KDTree<Dim>::KDTree(const KDTree<Dim>& other) {
    * @todo Implement this function!
    */
    copy(root, other);
-   	size = other.size;
 }
 
 template <int Dim>
@@ -135,9 +138,9 @@ const KDTree<Dim>& KDTree<Dim>::operator=(const KDTree<Dim>& rhs) {
   /**
    * @todo Implement this function!
    */
-  // _delete(root);
-  // _copy(root, rhs->root);
-  // return *this;
+  _delete(root);
+  _copy(root, rhs->root);
+  return *this;
 }
 
 template <int Dim>
@@ -145,21 +148,21 @@ KDTree<Dim>::~KDTree() {
   /**
    * @todo Implement this function!
    */
-  //  _delete(root);
+   _delete(root);
 }
 
 template <int Dim>
 void KDTree<Dim>::_delete(KDTreeNode * root) {
-  // if (root == NULL) {
-  //   return;
-  // }
-  // if (root->left != NULL) {
-  //   _delete(root->left);
-  // }
-  // if (root->right != NULL) {
-  //   _delete(root->right);
-  // }
-  // delete root;
+  if (root == NULL) {
+    return;
+  }
+  if (root->left != NULL) {
+    _delete(root->left);
+  }
+  if (root->right != NULL) {
+    _delete(root->right);
+  }
+  delete root;
 }
 
 template <int Dim>
