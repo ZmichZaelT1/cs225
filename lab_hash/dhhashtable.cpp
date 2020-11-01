@@ -80,14 +80,40 @@ void DHHashTable<K, V>::insert(K const& key, V const& value)
      *  0.7). **Do this check *after* increasing elems!!** Also, don't
      *  forget to mark the cell for probing with should_probe!
      */
+    unsigned int i = hashes::hash(key, size);
+    while (table[i] != NULL) {
+        unsigned int secondI = hashes::secondary_hash(key,size);
+        i += secondI;
+        i = i % size;
+    }
 
-    (void) key;   // prevent warnings... When you implement this function, remove this line.
-    (void) value; // prevent warnings... When you implement this function, remove this line.
+    table[i] = new std::pair<K, V>(key, value);
+    should_probe[i] = true;
+
+    elems++;
+    if (shouldResize()) {
+        resizeTable();
+    }
 }
 
 template <class K, class V>
 void DHHashTable<K, V>::remove(K const& key)
 {
+    unsigned int i = hashes::hash(key, size);
+    while (should_probe[i] && table[i]->first != key) {
+        if (table[i] != NULL && table[i]->first == key) {
+            break;
+        }
+        unsigned int secondI = hashes::secondary_hash(key,size);
+        i += secondI;
+        i = i % size;
+    }
+
+    if (table[i] != NULL && table[i]->first == key) {
+        delete table[i];
+        table[i] = NULL;
+        elems--;
+    }
     /**
      * @todo Implement this function
      */
@@ -96,6 +122,16 @@ void DHHashTable<K, V>::remove(K const& key)
 template <class K, class V>
 int DHHashTable<K, V>::findIndex(const K& key) const
 {
+    unsigned int i = hashes::hash(key, size);
+
+    while (should_probe[i]) {
+        if (table[i] != NULL && table[i]->first == key) {
+            return i;
+        }
+        unsigned int secondI = hashes::secondary_hash(key,size);
+        i += secondI;
+        i = i % size;
+    }
     /**
      * @todo Implement this function
      */

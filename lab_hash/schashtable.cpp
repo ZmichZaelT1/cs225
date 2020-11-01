@@ -4,7 +4,6 @@
  */
 
 #include "schashtable.h"
- 
 template <class K, class V>
 SCHashTable<K, V>::SCHashTable(size_t tsize)
 {
@@ -49,7 +48,14 @@ SCHashTable<K, V>::SCHashTable(SCHashTable<K, V> const& other)
 template <class K, class V>
 void SCHashTable<K, V>::insert(K const& key, V const& value)
 {
-
+    std::pair<K, V> add(key, value);
+    unsigned int i = hashes::hash(key, size);
+    table[i].push_front(add);
+    
+    elems++;
+    if (shouldResize()) {
+        resizeTable();
+    }
     /**
      * @todo Implement this function.
      *
@@ -60,18 +66,34 @@ template <class K, class V>
 void SCHashTable<K, V>::remove(K const& key)
 {
     typename std::list<std::pair<K, V>>::iterator it;
+
+    unsigned int i = hashes::hash(key, size);
+    for (it = table[i].begin(); it != table[i].end(); it++) {
+        if (it->first == key) {
+            table[i].erase(it);
+            elems--;
+            break;
+        }
+    }
     /**
      * @todo Implement this function.
      *
      * Please read the note in the lab spec about list iterators and the
      * erase() function on std::list!
      */
-    (void) key; // prevent warnings... When you implement this function, remove this line.
 }
 
 template <class K, class V>
 V SCHashTable<K, V>::find(K const& key) const
-{
+{   
+    unsigned int i = hashes::hash(key,size);
+    typename std::list<std::pair<K, V>>::iterator it;
+    for (it = table[i].begin(); it != table[i].end(); it++) {
+        if (it->first == key) {
+            return it->second;
+        }
+        
+    }
 
     /**
      * @todo: Implement this function.
@@ -126,6 +148,19 @@ template <class K, class V>
 void SCHashTable<K, V>::resizeTable()
 {
     typename std::list<std::pair<K, V>>::iterator it;
+
+    std::list<std::pair<K, V>> * resized = new std::list<std::pair<K, V>>[findPrime(2 * size)];
+
+    for (unsigned int i = 0; i < size; i++) {
+        for (it = table[i].begin(); it != table[i].end(); it++) {
+            unsigned int index = hashes::hash(it->first, findPrime(2 * size));
+            std::pair<K, V> temp(it->first, it->second);
+            resized[index].push_front(temp);
+        }
+    }
+    delete[] table;
+    table = resized;
+    size = findPrime(2 * size);
     /**
      * @todo Implement this function.
      *

@@ -80,13 +80,38 @@ void LPHashTable<K, V>::insert(K const& key, V const& value)
      * Also, don't forget to mark the cell for probing with should_probe!
      */
 
-    (void) key;   // prevent warnings... When you implement this function, remove this line.
-    (void) value; // prevent warnings... When you implement this function, remove this line.
+    unsigned int i = hashes::hash(key, size);
+    while (should_probe[i]) {
+        i++;
+        i = i % size;
+    }
+    
+    table[i] = new std::pair<K, V>(key, value);
+    should_probe[i] = true;
+
+    elems++;
+    if (shouldResize()) {
+        resizeTable();
+    }
 }
 
 template <class K, class V>
 void LPHashTable<K, V>::remove(K const& key)
 {
+    unsigned int i = hashes::hash(key, size);
+
+    while(should_probe[i]) {
+        if (table[i] && table[i]->first == key) {
+            break;
+        }
+        i++;
+        i = i % size;
+    }
+    if (i >= 0) {
+        delete table[i];
+        table[i] = NULL;
+        elems--;
+    }
     /**
      * @todo: implement this function
      */
@@ -95,7 +120,15 @@ void LPHashTable<K, V>::remove(K const& key)
 template <class K, class V>
 int LPHashTable<K, V>::findIndex(const K& key) const
 {
-    
+    unsigned int i = hashes::hash(key, size);
+
+    while(should_probe[i]) {
+        if (table[i] && table[i]->first == key) {
+            return i;
+        }
+        i++;
+        i = i % size;
+    }
     /**
      * @todo Implement this function
      *
@@ -151,7 +184,31 @@ void LPHashTable<K, V>::clear()
 template <class K, class V>
 void LPHashTable<K, V>::resizeTable()
 {
+    unsigned int newSize = findPrime(size * 2);
+    std::pair<K, V>** resized = new std::pair<K, V>*[newSize];
+    delete[] should_probe;
+    should_probe = new bool[newSize];
 
+    for (unsigned int i = 0; i < newSize; i++) {
+        resized[i] = NULL;
+        should_probe[i] = false;
+    }
+
+    for (unsigned int i = 0; i < size; i++) {
+        if (table[i] != NULL) {
+            unsigned int index = hashes::hash(table[i]->first, newSize);
+            while (resized[index] != NULL) {
+                index++;
+                index = index % newSize;
+            }
+            resized[index] = table[i];
+            should_probe[index] = true;
+        }
+    }
+
+    delete[] table;
+    table = resized;
+    size = newSize;
     /**
      * @todo Implement this function
      *
