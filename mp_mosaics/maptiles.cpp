@@ -33,8 +33,8 @@ MosaicCanvas* mapTiles(SourceImage const& theSource,
 
     KDTree<3> colorTree(colorPoints);
 
-    for(unsigned x = 0; x < theSource.getRows(); x++) {
-        for (unsigned y = 0; y < theSource.getColumns(); y++) {
+    for(int x = 0; x < theSource.getRows(); x++) {
+        for (int y = 0; y < theSource.getColumns(); y++) {
             LUVAPixel pixel = theSource.getRegionColor(x, y);
             Point<3> cor = convertToXYZ(pixel);
             Point<3> nearest = colorTree.findNearestNeighbor(cor);
