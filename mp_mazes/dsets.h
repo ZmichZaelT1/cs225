@@ -1,5 +1,15 @@
 /* Your code here! */
-void DisjointSets::addelements (int num);
-int DisjointSets::find (int elem);
-void DisjointSets::setunion (int a, int b);
-int DisjointSets::size (int elem);
+#pragma once
+
+#include <vector>
+using namespace std;
+class DisjointSets {
+    private:
+        vector<int> tree;
+    public:
+        void addelements (int num);
+        int find (int elem);
+        void setunion (int a, int b);
+        int size (int elem);
+};
+
