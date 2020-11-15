@@ -7,6 +7,7 @@
  */
 
 #include <fstream>
+#include <iostream>
 
 #include "cartalk_puzzle.h"
 
@@ -25,6 +26,20 @@ vector<std::tuple<std::string, std::string, std::string>> cartalk_puzzle(Pronoun
 {
     vector<std::tuple<std::string, std::string, std::string>> ret;
 
+    ifstream wordsFile(word_list_fname);
+    string word;
+    if (wordsFile.is_open()) {
+        /* Reads a line from `wordsFile` into `word` until the file ends. */
+        while (getline(wordsFile, word)) {
+            if (word.size() == 5) {
+                string word1 = word.substr(1);
+                string word2 = word[0] + word.substr(2);
+                if (d.homophones(word, word1) && d.homophones(word, word2)) {
+                    ret.push_back(tuple<string, string, string>(word, word1, word2));
+                }
+            }
+        }
+    }
     /* Your code goes here! */
     return ret;
 }
