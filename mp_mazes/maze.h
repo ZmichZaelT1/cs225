@@ -1,13 +1,13 @@
 /* Your code here! */
 #pragma once
 #include "cs225/PNG.h"
+#include "dsets.h"
 #include <vector>
 
 using namespace std;
 using namespace cs225;
 
 class SquareMaze {
-    private:
     public:
         void makeMaze (int width, int height);
         bool canTravel (int x, int y, int dir) const;
@@ -15,4 +15,10 @@ class SquareMaze {
         vector< int > solveMaze ();
         PNG * drawMaze ()const; 
         PNG * drawMazeWithSolution ();		
+    private:
+        int height;
+        int width;
+        DisjointSets dsets;
+        vector<int> maze;
+        
 };
